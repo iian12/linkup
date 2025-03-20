@@ -9,10 +9,12 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.http.HttpHeaders;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.Base64;
 
+@Component
 public class TokenUtils {
 
     @Value("${jwt.secret-key}")
@@ -33,6 +35,7 @@ public class TokenUtils {
 
         if (token != null && token.startsWith("Bearer ")) {
             token = token.substring(7);
+            return token;
         }
 
         Cookie[] cookies = request.getCookies();

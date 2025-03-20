@@ -32,15 +32,17 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         String subjectId = getAttribute(oAuth2User, provider, "sub");
         String nickname = getAttribute(oAuth2User, provider, "name");
 
-        Users user = Users.builder()
-                .email(email)
-                .profileImgUrl(picture)
-                .subjectId(subjectId)
-                .nickname(nickname)
-                .provider(oauthProvider)
-                .role(Role.USER)
-                .build();
-        userRepository.save(user);
+        Users user = userRepository.findByEmail(email).orElseGet(() -> {
+            Users newUser = Users.builder()
+                    .email(email)
+                    .profileImgUrl(picture)
+                    .subjectId(subjectId)
+                    .nickname(nickname)
+                    .provider(oauthProvider)
+                    .role(Role.USER)
+                    .build();
+            return userRepository.save(newUser);
+        });
 
         return new CustomUserDetail(user, user.getId());
     }

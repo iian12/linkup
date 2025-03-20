@@ -7,12 +7,14 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
+@Slf4j
 @Component
 public class CustomOAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
@@ -34,6 +36,8 @@ public class CustomOAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHa
 
         Cookie accessTokenCookie = createCookie("access_token", accessToken);
         Cookie refreshTokenCookie = createCookie("refresh_token", refreshToken);
+
+        log.info("accessToken: {} refreshToken: {} userId: {} userId: {}", accessToken, refreshToken, userId, userId);
 
         response.setStatus(HttpServletResponse.SC_OK);
         response.addCookie(accessTokenCookie);
