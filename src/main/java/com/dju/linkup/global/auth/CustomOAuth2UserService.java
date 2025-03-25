@@ -30,14 +30,12 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         String email = getAttribute(oAuth2User, provider, "email");
         String picture = getAttribute(oAuth2User, provider, "picture");
         String subjectId = getAttribute(oAuth2User, provider, "sub");
-        String nickname = getAttribute(oAuth2User, provider, "name");
 
         Users user = userRepository.findByEmail(email).orElseGet(() -> {
             Users newUser = Users.builder()
                     .email(email)
                     .profileImgUrl(picture)
                     .subjectId(subjectId)
-                    .nickname(nickname)
                     .provider(oauthProvider)
                     .role(Role.USER)
                     .build();

@@ -19,9 +19,7 @@ public class Users {
     private String email;
     private String password;
 
-    @Column(unique = true, nullable = true)
-    private String profileId;
-
+    @Column(nullable = true, unique = true)
     private String nickname;
     private String profileImgUrl;
     private boolean isSignUp;
@@ -35,16 +33,23 @@ public class Users {
     private Role role;
 
     @Builder
-    public Users(String email, String password, String profileId, String nickname, String profileImgUrl,
+    public Users(String email, String password, String nickname, String profileImgUrl,
                  Provider provider, String subjectId, Role role) {
         this.email = email;
         this.password = password;
-        this.profileId = profileId;
         this.nickname = nickname;
         this.profileImgUrl = profileImgUrl;
         this.isSignUp = false;
         this.provider = provider;
         this.subjectId = subjectId;
         this.role = role;
+    }
+
+    public void updateNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public void updateSignUp() {
+        this.isSignUp = true;
     }
 }
