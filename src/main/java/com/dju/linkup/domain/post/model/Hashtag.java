@@ -21,9 +21,9 @@ public class Hashtag {
     private int count;
 
     @Builder
-    public Hashtag(String name, int count) {
+    public Hashtag(String name) {
         this.name = name;
-        this.count = 0;
+        this.count = 1;
     }
 
     public void addCount() {
