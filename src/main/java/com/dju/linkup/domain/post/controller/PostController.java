@@ -3,6 +3,7 @@ package com.dju.linkup.domain.post.controller;
 import com.dju.linkup.domain.post.dto.PostRequestDto;
 import com.dju.linkup.domain.post.dto.PostListResDto;
 import com.dju.linkup.domain.post.service.PostService;
+import com.dju.linkup.domain.vote.dto.PostWithVoteRequestDto;
 import com.dju.linkup.global.security.TokenUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.MediaType;
@@ -30,7 +31,13 @@ public class PostController {
     public ResponseEntity<String> createPost(@ModelAttribute PostRequestDto postRequestDto, HttpServletRequest request) {
         String token = TokenUtils.extractTokenFromRequest(request);
 
-        String postId = postService.createPost(postRequestDto, token);
+        String postId;
+        if (postRequestDto instanceof PostWithVoteRequestDto) {
+            postId = postService.createPostWithVote((PostWithVoteRequestDto) postRequestDto, token);
+        } else {
+            postId = postService.createPost(postRequestDto, token);
+        }
+
         return ResponseEntity.ok(postId);
     }
 
@@ -38,6 +45,7 @@ public class PostController {
     public ResponseEntity<String> updatePost(@PathVariable String postId, @ModelAttribute PostRequestDto postRequestDto, HttpServletRequest request) {
         String token = TokenUtils.extractTokenFromRequest(request);
         String id = postService.updatePost(postId, postRequestDto, token);
+
         return ResponseEntity.ok(id);
     }
 
@@ -45,6 +53,7 @@ public class PostController {
     public ResponseEntity<Void> deletePost(@RequestParam String postId, HttpServletRequest request) {
         String token = TokenUtils.extractTokenFromRequest(request);
         postService.deletePost(postId, token);
+
         return ResponseEntity.ok().build();
     }
 }

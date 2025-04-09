@@ -31,7 +31,6 @@ public class CustomUserDetail implements UserDetails, OAuth2User {
             attributes.put("id", user.getId());
             attributes.put("email", user.getEmail());
             attributes.put("nickname", user.getNickname());
-            attributes.put("profileId", user.getProfileId());
             attributes.put("role", user.getRole());
             attributes.put("profileImgUrl", user.getProfileImgUrl());
 
