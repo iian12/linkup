@@ -8,14 +8,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @NoArgsConstructor
-public class CreatePostDto {
+public class PostRequestDto {
     private String title;
     private String content;
     private String topic;
     private List<String> hashtagNames = new ArrayList<>();
     private List<MultipartFile> images = new ArrayList<>();
 
-    public CreatePostDto(String title, String content, String topic, List<String> hashtagNames, List<MultipartFile> images) {
+    public PostRequestDto(String title, String content, String topic, List<String> hashtagNames, List<MultipartFile> images) {
         this.title = title;
         this.content = content;
         this.topic = topic;

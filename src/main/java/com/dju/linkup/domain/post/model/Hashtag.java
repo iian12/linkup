@@ -29,4 +29,5 @@ public class Hashtag {
     public void addCount() {
         this.count++;
     }
+    public void deleteCount() { this.count--; }
 }

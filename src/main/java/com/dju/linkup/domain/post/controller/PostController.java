@@ -1,6 +1,6 @@
 package com.dju.linkup.domain.post.controller;
 
-import com.dju.linkup.domain.post.dto.CreatePostDto;
+import com.dju.linkup.domain.post.dto.PostRequestDto;
 import com.dju.linkup.domain.post.dto.PostListResDto;
 import com.dju.linkup.domain.post.service.PostService;
 import com.dju.linkup.global.security.TokenUtils;
@@ -27,11 +27,18 @@ public class PostController {
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<String> createPost(@ModelAttribute CreatePostDto createPostDto, HttpServletRequest request) {
+    public ResponseEntity<String> createPost(@ModelAttribute PostRequestDto postRequestDto, HttpServletRequest request) {
         String token = TokenUtils.extractTokenFromRequest(request);
 
-        String postId = postService.createPost(createPostDto, token);
+        String postId = postService.createPost(postRequestDto, token);
         return ResponseEntity.ok(postId);
+    }
+
+    @PutMapping(path = "/{postId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<String> updatePost(@PathVariable String postId, @ModelAttribute PostRequestDto postRequestDto, HttpServletRequest request) {
+        String token = TokenUtils.extractTokenFromRequest(request);
+        String id = postService.updatePost(postId, postRequestDto, token);
+        return ResponseEntity.ok(id);
     }
 
     @DeleteMapping

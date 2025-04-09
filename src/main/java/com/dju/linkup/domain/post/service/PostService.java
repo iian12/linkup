@@ -1,7 +1,7 @@
 package com.dju.linkup.domain.post.service;
 
 import com.dju.linkup.domain.file.FileService;
-import com.dju.linkup.domain.post.dto.CreatePostDto;
+import com.dju.linkup.domain.post.dto.PostRequestDto;
 import com.dju.linkup.domain.post.dto.PostListResDto;
 import com.dju.linkup.domain.post.model.Post;
 import com.dju.linkup.domain.post.model.PostTopic;
@@ -54,7 +54,7 @@ public class PostService {
         }).collect(Collectors.toList());
     }
 
-    public String createPost(CreatePostDto reqDto, String token) {
+    public String createPost(PostRequestDto reqDto, String token) {
         Users user = userRepository.findById(TokenUtils.getUserIdFromToken(token))
             .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
@@ -78,6 +78,26 @@ public class PostService {
         return post.getId();
     }
 
+    public String updatePost(String postId, PostRequestDto reqDto, String token) {
+        Users user = userRepository.findById(TokenUtils.getUserIdFromToken(token))
+            .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("Post not found"));
+
+        if (!Objects.equals(user.getId(), post.getUserId())) {
+            throw new IllegalArgumentException("User not authorized to update this post");
+        }
+
+        List<String> hashtagIds = hashtagService.findOrCreateHashtags(reqDto.getHashtagNames());
+        List<String> imageUrls = reqDto.getImages()
+                .stream().map(fileService::saveFile).toList();
+        PostTopic topic = PostTopic.fromString(reqDto.getTopic());
+        post.updatePost(reqDto.getTitle(), reqDto.getContent(), hashtagIds, imageUrls, topic);
+
+        return post.getId();
+    }
+
     public void deletePost(String postId, String token) {
         Users user = userRepository.findById(TokenUtils.getUserIdFromToken(token))
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
@@ -85,8 +105,10 @@ public class PostService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("Post not found"));
 
-        if (Objects.equals(user.getId(), post.getUserId())) {
-            postRepository.delete(post);
+        if (!Objects.equals(user.getId(), post.getUserId())) {
+            throw new IllegalArgumentException("User not authorized to delete this post");
         }
+
+        postRepository.delete(post);
     }
 }

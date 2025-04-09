@@ -58,4 +58,12 @@ public class Post {
         this.isUpdated = false;
         this.available = Available.ACCESS;
     }
+
+    public void updatePost(String title, String content, List<String> hashtagIds, List<String> imgUrls, PostTopic topic) {
+        this.title = title;
+        this.content = content;
+        this.hashtagIds = hashtagIds;
+        this.imgUrls = imgUrls;
+        this.topic = topic;
+    }
 }
